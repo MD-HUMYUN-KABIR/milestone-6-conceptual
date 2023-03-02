@@ -1,3 +1,5 @@
+let fetchData = [];
+
 const fetchCategories = async()=>{
  const url = `https://openapi.programming-hero.com/api/news/categories`
  const res = await fetch(url);
@@ -15,11 +17,12 @@ data.forEach(singleCategories => {
 }
 
 const fetchCategoryNews = async(category_id,category_name) => {
-    console.log(category_id);
+    // console.log(category_id);
  const url = `https://openapi.programming-hero.com/api/news/category/${category_id}`
- console.log(url);
+//  console.log(url);
  const res = await fetch(url);
  const data = await res.json();
+ fetchData = data.data;
  showCategoryNews(data.data,category_name);
 };
 
@@ -33,7 +36,7 @@ const showCategoryNews = (category_id,category_name) => {
  newsContainer.innerHTML = '';
  category_id.forEach(singleNews => {
 console.log(singleNews);
-const {_id,image_url,title,details,author,total_view} = singleNews;
+const {_id,image_url,title,details,author,total_view,rating} = singleNews;
     newsContainer.innerHTML += `
     <div class="card mb-3">
     <div class="row g-0">
@@ -60,8 +63,10 @@ const {_id,image_url,title,details,author,total_view} = singleNews;
             <p class="m-0 p-0 "> ${total_view
             }</p>
         </div>
-        <div>
-            <p><i class="fa-solid fa-eye"></i></p>
+        <div class="d-flex">
+       ${generateRating(rating.number)} 
+          
+           <p>${rating.number}</p>
         </div>
         <div>
             <p data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="fetchNewsDetails('${_id}')"><i class="fa-solid fa-arrow-right"></i></p>
@@ -87,10 +92,10 @@ const fetchNewsDetails = async(news_id) => {
 }
 
 const showNewsDetails = news_id => {
-    console.log(news_id);
+    // console.log(news_id);
     const modalBody =  document.getElementById('modal-body');
     modalBody.innerHTML = '';
-    const {_id,image_url,title,details,author,total_view} = news_id;
+    const {_id,image_url,title,details,author,total_view,others_info} = news_id;
     modalBody.innerHTML += `
     <div class="card mb-3">
     <div class="row g-0">
@@ -99,7 +104,7 @@ const showNewsDetails = news_id => {
       </div>
       <div class="col-12 d-flex flex-column">
         <div class="card-body">
-          <h5 class="card-title">${title}</h5>
+          <h5 class="card-title">${title} <span class="badge text-bg-warning">${others_info.is_trending ? "trending" : "untrending"}</span></h5>
         ${details }
         </div>
 
@@ -129,4 +134,32 @@ const showNewsDetails = news_id => {
     </div>
   </div>
     `
+}
+
+const showTrending = () => {
+  // console.log(fetchData);
+  let trendingNews = fetchData.filter(singleNews => singleNews.others_info.is_trending === true);
+  // console.log(trendingNews);
+  const newsName = document.getElementById('news-name').innerText;
+  showCategoryNews(trendingNews,newsName);
+}
+
+/* 
+formate date using javascript */
+
+//////
+const generateRating = rating => {
+  let ratingHtml = '';
+  for (let i = 1; i <= Math.floor(rating); i++) {
+    ratingHtml += `
+    <i class="fa-solid fa-star"></i>
+    `
+  }
+  if(rating - Math.floor(rating) > 0){
+    ratingHtml +=`
+    <i class="fa-solid fa-star-half"></i>
+    `
+  }
+
+  return ratingHtml;
 }
