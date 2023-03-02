@@ -49,7 +49,7 @@ const {_id,image_url,title,details,author,total_view,rating} = singleNews;
         ${details.slice(0,200) }......
         </div>
 
-        <div class="card-footer borde-0 bg-body d-flex justify-content-between">
+        <div class="card-footer border-0 bg-body d-flex justify-content-between">
         <div class="d-flex gap-2">
             <img src=${author.img} alt="" height ="40" width ="40">
             <div>
@@ -121,12 +121,6 @@ const showNewsDetails = news_id => {
             <p><i class="fa-solid fa-eye"></i></p>
             <p class="m-0 p-0 "> ${total_view}</p>
         </div>
-        <div>
-            <p><i class="fa-solid fa-eye"></i></p>
-        </div>
-        <div>
-            <p data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="fetchNewsDetails('${_id}')"><i class="fa-solid fa-arrow-right"></i></p>
-        </div>
     </div>
 
       </div>
@@ -144,8 +138,6 @@ const showTrending = () => {
   showCategoryNews(trendingNews,newsName);
 }
 
-/* 
-formate date using javascript */
 
 //////
 const generateRating = rating => {
@@ -163,3 +155,9 @@ const generateRating = rating => {
 
   return ratingHtml;
 }
+
+/* 
+formate date using javascript 
+js select option value
+or js select
+*/
